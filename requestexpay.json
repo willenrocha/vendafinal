@@ -1,0 +1,19 @@
+[
+    'merchant_key' => '$2y$10$Y8G0Z.yKxy2NCC7xXWi3yO0vqcrSFLLBuELNZsogtX.hyE.s.l3lq',
+    'currency_code' => 'BRL',
+    'invoice' => '{
+    "invoice_id":"1000",
+    "invoice_description":"Descrição da fatura 1000",
+    "total":"40.00",
+    "devedor":"João Guedes",
+    "email":"joaoguedes@gmail.com",
+    "cpf_cnpj":"64597420061",
+    "notification_url":"https://meusite.com/notification/",
+    "telefone":"87981662211",
+    "items":[{
+    "name":"Produto",
+    "price":"40.00",
+    "description":"Descrição",
+    "qty":"1"
+    }]}'
+]

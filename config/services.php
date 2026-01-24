@@ -35,4 +35,19 @@ return [
         ],
     ],
 
+    'hikerapi' => [
+        'base_url' => env('HIKERAPI_BASE_URL', 'https://api.hikerapi.com'),
+        'access_key' => env('HIKERAPI_ACCESS_KEY'),
+    ],
+
+    'whatsapp' => [
+        // Ex: https://wa.me/5511999999999?text=Quero%20saber%20mais%20sobre%20Engajamento%20Inteligente
+        'engajamento_inteligente_url' => env('WHATSAPP_ENGAJAMENTO_INTELIGENTE_URL'),
+    ],
+
+    'client' => [
+        // URL do portal do cliente (futuro Vue). Ex: https://cliente.seudominio.com
+        'app_url' => env('CLIENT_APP_URL'),
+    ],
+
 ];
