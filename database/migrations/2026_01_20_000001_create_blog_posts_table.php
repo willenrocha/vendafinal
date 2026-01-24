@@ -17,27 +17,27 @@ return new class extends Migration
             $table->string('featured_image')->nullable();
             $table->string('category')->nullable();
             $table->json('tags')->nullable();
-            
+
             // SEO fields
             $table->string('meta_title')->nullable();
             $table->text('meta_description')->nullable();
             $table->text('meta_keywords')->nullable();
             $table->string('canonical_url')->nullable();
-            
+
             // Publishing
             $table->boolean('is_published')->default(false);
             $table->timestamp('published_at')->nullable();
             $table->integer('reading_time')->nullable(); // em minutos
-            
+
             // Analytics
             $table->unsignedBigInteger('views_count')->default(0);
-            
+
             // Author
             $table->foreignId('author_id')->nullable()->constrained('users')->nullOnDelete();
-            
+
             $table->timestamps();
             $table->softDeletes();
-            
+
             $table->index('slug');
             $table->index('is_published');
             $table->index('published_at');

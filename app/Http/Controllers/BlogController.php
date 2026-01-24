@@ -31,7 +31,7 @@ class BlogController extends Controller
         }
 
         $posts = $query->paginate(12);
-        
+
         $categories = BlogPost::published()
             ->whereNotNull('category')
             ->distinct()
@@ -57,7 +57,7 @@ class BlogController extends Controller
             ->where('id', '!=', $post->id)
             ->where(function ($query) use ($post) {
                 $query->where('category', $post->category);
-                
+
                 if ($post->tags) {
                     foreach ($post->tags as $tag) {
                         $query->orWhereJsonContains('tags', $tag);

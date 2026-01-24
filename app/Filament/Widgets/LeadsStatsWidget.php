@@ -15,25 +15,25 @@ class LeadsStatsWidget extends StatsOverviewWidget
     {
         // Total de leads (pedidos não pagos)
         $totalLeads = Order::where('status', OrderStatus::AwaitingPayment)->count();
-        
+
         // Leads não contatados
         $notContacted = Order::where('status', OrderStatus::AwaitingPayment)
             ->whereNull('contacted_at')
             ->count();
-        
+
         // Leads contatados
         $contacted = Order::where('status', OrderStatus::AwaitingPayment)
             ->whereNotNull('contacted_at')
             ->count();
-        
+
         // Taxa de conversão de contato
         $contactRate = $totalLeads > 0 ? round(($contacted / $totalLeads) * 100) : 0;
-        
+
         // Leads de hoje
         $todayLeads = Order::where('status', OrderStatus::AwaitingPayment)
             ->whereDate('created_at', today())
             ->count();
-        
+
         // Valor total em leads
         $leadsValue = Order::where('status', OrderStatus::AwaitingPayment)->sum('amount');
 

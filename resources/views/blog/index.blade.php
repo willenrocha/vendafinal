@@ -7,7 +7,7 @@
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-gray-50 font-inter">
-  
+
   <!-- Navbar -->
   <nav class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -18,7 +18,7 @@
           </div>
           <span class="text-xl font-bold text-gray-900">VendaFinal</span>
         </a>
-        
+
         <div class="flex items-center space-x-4">
           <a href="/" class="text-gray-600 hover:text-indigo-600 transition-colors">Início</a>
           <a href="/#pacotes" class="text-gray-600 hover:text-indigo-600 transition-colors">Pacotes</a>
@@ -45,17 +45,17 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <form method="GET" action="{{ route('blog.index') }}" class="flex flex-col md:flex-row gap-4">
         <div class="flex-1">
-          <input 
-            type="text" 
-            name="search" 
-            value="{{ request('search') }}" 
-            placeholder="Buscar posts..." 
+          <input
+            type="text"
+            name="search"
+            value="{{ request('search') }}"
+            placeholder="Buscar posts..."
             class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
           >
         </div>
-        
-        <select 
-          name="category" 
+
+        <select
+          name="category"
           onchange="this.form.submit()"
           class="px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
         >
@@ -66,8 +66,8 @@
             </option>
           @endforeach
         </select>
-        
-        <button 
+
+        <button
           type="submit"
           class="px-6 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors"
         >
@@ -80,7 +80,7 @@
   <!-- Grid de Posts -->
   <section class="py-16 lg:py-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      
+
       @if($posts->count() > 0)
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10 mb-12">
           @foreach($posts as $post)
@@ -88,9 +88,9 @@
               <a href="{{ route('blog.show', $post->slug) }}">
                 @if($post->featured_image)
                   <div class="relative overflow-hidden aspect-[16/10]">
-                    <img 
-                      src="{{ Storage::url($post->featured_image) }}" 
-                      alt="{{ $post->title }}" 
+                    <img
+                      src="{{ Storage::url($post->featured_image) }}"
+                      alt="{{ $post->title }}"
                       class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     >
                     @if($post->category)
@@ -102,7 +102,7 @@
                     @endif
                   </div>
                 @endif
-                
+
                 <div class="p-6 lg:p-8">
                   <div class="flex items-center space-x-4 text-sm text-gray-500 mb-4">
                     <time datetime="{{ $post->published_at?->toDateString() }}">
@@ -113,17 +113,17 @@
                       <span>{{ $post->reading_time_text }}</span>
                     @endif
                   </div>
-                  
+
                   <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-indigo-600 transition-colors line-clamp-2">
                     {{ $post->title }}
                   </h3>
-                  
+
                   @if($post->excerpt)
                     <p class="text-gray-600 leading-relaxed mb-6 line-clamp-3">
                       {{ $post->excerpt }}
                     </p>
                   @endif
-                  
+
                   <div class="inline-flex items-center text-indigo-600 font-semibold hover:text-indigo-700 transition-colors">
                     Ler mais
                     <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">

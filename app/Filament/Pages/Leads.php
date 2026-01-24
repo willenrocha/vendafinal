@@ -35,7 +35,7 @@ class Leads extends Page implements HasTable
     {
         return 'Gerenciamento de Leads';
     }
-    
+
     public function getView(): string
     {
         return 'filament.pages.leads';

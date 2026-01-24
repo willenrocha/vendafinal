@@ -47,15 +47,15 @@ class BlogPost extends Model
             if (empty($post->slug)) {
                 $post->slug = Str::slug($post->title);
             }
-            
+
             if (empty($post->reading_time) && !empty($post->content)) {
                 $post->reading_time = max(1, (int) ceil(str_word_count(strip_tags($post->content)) / 200));
             }
-            
+
             if (empty($post->meta_title)) {
                 $post->meta_title = $post->title;
             }
-            
+
             if (empty($post->excerpt) && !empty($post->content)) {
                 $post->excerpt = Str::limit(strip_tags($post->content), 200);
             }
@@ -65,15 +65,15 @@ class BlogPost extends Model
             if ($post->isDirty('title') && empty($post->slug)) {
                 $post->slug = Str::slug($post->title);
             }
-            
+
             if ($post->isDirty('content') && !empty($post->content)) {
                 $post->reading_time = max(1, (int) ceil(str_word_count(strip_tags($post->content)) / 200));
             }
-            
+
             if (empty($post->meta_title)) {
                 $post->meta_title = $post->title;
             }
-            
+
             if (empty($post->excerpt) && !empty($post->content)) {
                 $post->excerpt = Str::limit(strip_tags($post->content), 200);
             }
