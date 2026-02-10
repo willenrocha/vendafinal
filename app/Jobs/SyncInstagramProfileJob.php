@@ -60,8 +60,8 @@ class SyncInstagramProfileJob implements ShouldQueue
 
         // Verificar se os dados vieram vazios/null
         $profile->refresh();
-        $isDataEmpty = empty($profile->full_name) && 
-                       empty($profile->follower_count) && 
+        $isDataEmpty = empty($profile->full_name) &&
+                       empty($profile->follower_count) &&
                        empty($profile->biography);
 
         if ($isDataEmpty && $this->attempts() < $this->tries) {
@@ -71,7 +71,7 @@ class SyncInstagramProfileJob implements ShouldQueue
                 'attempt' => $this->attempts(),
                 'max_tries' => $this->tries,
             ]);
-            
+
             // Liberar o job de volta para a fila para tentar novamente
             $this->release(5); // Aguarda 5 segundos antes de tentar novamente
             return;
