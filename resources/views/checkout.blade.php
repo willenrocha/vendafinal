@@ -359,149 +359,135 @@
   </main>
 
   <!-- Modal PIX com QR Code -->
-  <div class="fixed inset-0 z-50 hidden items-center justify-center p-4" data-pix-modal aria-hidden="true">
+  <div class="fixed inset-0 z-50 hidden items-center justify-center p-0 sm:p-4" data-pix-modal aria-hidden="true">
     <!-- Overlay -->
     <div class="absolute inset-0 bg-gray-900/80 backdrop-blur-md transition-opacity" data-pix-modal-close></div>
 
-    <!-- Modal Content -->
-    <div class="relative w-full max-w-4xl max-h-[95vh] flex flex-col bg-white rounded-3xl shadow-2xl overflow-hidden animate-fade-in-up">
-      <!-- Header do Modal -->
-      <div class="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 px-8 py-8">
+    <!-- Modal Content — mobile: fullscreen, desktop: centered card -->
+    <div class="relative w-full h-full sm:h-auto sm:max-h-[95vh] sm:max-w-lg lg:max-w-3xl flex flex-col bg-white sm:rounded-3xl shadow-2xl overflow-hidden animate-fade-in-up">
+
+      <!-- Header do Modal — compacto no mobile -->
+      <div class="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 px-4 py-5 sm:px-6 sm:py-6">
         <!-- Background Pattern -->
         <div class="absolute inset-0 opacity-10">
           <div class="absolute inset-0" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 32px 32px;"></div>
         </div>
 
-        <div class="relative flex items-start justify-between gap-6">
-          <div class="flex-1">
-            <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full mb-3">
-              <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-              </svg>
-              <span class="text-sm font-bold text-white">Pagamento Seguro</span>
-            </div>
+        <!-- Close button -->
+        <button type="button" class="absolute top-3 right-3 sm:top-4 sm:right-4 z-10 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/15 hover:bg-white/25 backdrop-blur-sm flex items-center justify-center transition group" data-pix-modal-close aria-label="Fechar">
+          <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white group-hover:scale-110 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
 
-            <h3 class="text-3xl font-extrabold text-white mb-2">
-              Pague com Pix
-            </h3>
-            <p class="text-purple-100 text-lg">
-              Escaneie o QR Code ou copie o código para pagar no seu banco
-            </p>
-          </div>
-
-          <button type="button" class="flex-shrink-0 w-12 h-12 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-sm flex items-center justify-center transition group" data-pix-modal-close aria-label="Fechar">
-            <svg class="w-6 h-6 text-white group-hover:scale-110 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+        <div class="relative pr-12">
+          <h3 class="text-xl sm:text-2xl font-extrabold text-white">
+            Pague com Pix
+          </h3>
+          <p class="text-purple-100 text-sm mt-1 hidden sm:block">
+            Escaneie o QR Code ou copie o código
+          </p>
         </div>
 
-        <!-- Info Cards no Header -->
-        <div class="relative grid grid-cols-2 gap-4 mt-6">
-          <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
-            <p class="text-sm font-medium text-purple-100">Valor Total</p>
-            <p class="text-2xl font-extrabold text-white mt-1">{{ $price }}</p>
+        <!-- Info Cards — sempre lado a lado, compactos -->
+        <div class="relative grid grid-cols-2 gap-3 mt-4">
+          <div class="bg-white/15 backdrop-blur-sm rounded-xl px-3 py-2.5 sm:px-4 sm:py-3 border border-white/20">
+            <p class="text-[11px] sm:text-xs font-medium text-purple-200 uppercase tracking-wide">Valor</p>
+            <p class="text-lg sm:text-xl font-extrabold text-white mt-0.5 leading-tight">{{ $price }}</p>
           </div>
-          <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
-            <p class="text-sm font-medium text-purple-100">Tempo Limite</p>
-            <p class="text-2xl font-extrabold text-white mt-1" data-pix-countdown>10:00</p>
+          <div class="bg-white/15 backdrop-blur-sm rounded-xl px-3 py-2.5 sm:px-4 sm:py-3 border border-white/20">
+            <p class="text-[11px] sm:text-xs font-medium text-purple-200 uppercase tracking-wide">Tempo Limite</p>
+            <p class="text-lg sm:text-xl font-extrabold text-white mt-0.5 leading-tight" data-pix-countdown>10:00</p>
           </div>
         </div>
       </div>
 
-      <!-- Body do Modal -->
-      <div class="flex-1 overflow-y-auto p-8">
-        <div class="hidden mb-6" data-pix-error-modal></div>
+      <!-- Body do Modal — scroll no mobile -->
+      <div class="flex-1 overflow-y-auto px-4 py-5 sm:px-6 sm:py-6 space-y-5">
+        <div class="hidden" data-pix-error-modal></div>
 
-        <div class="grid lg:grid-cols-2 gap-8">
-          <!-- QR Code -->
-          <div class="space-y-4">
-            <div class="flex items-center gap-3 mb-4">
-              <div class="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center">
-                <span class="text-2xl font-bold text-white">1</span>
-              </div>
-              <div>
-                <h4 class="text-lg font-bold text-gray-900">Escaneie o QR Code</h4>
-                <p class="text-sm text-gray-600">Abra seu app de banco e escolha Pix</p>
-              </div>
+        <!-- QR Code — centralizado, tamanho adaptável -->
+        <div>
+          <div class="flex items-center gap-2.5 mb-3">
+            <div class="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
+              <span class="text-base sm:text-lg font-bold text-white">1</span>
             </div>
-
-            <div class="relative group">
-              <div class="absolute inset-0 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition"></div>
-              <div class="relative bg-white rounded-3xl border-2 border-gray-100 p-6 flex items-center justify-center min-h-[280px] shadow-xl" data-pix-qr>
-                <div class="text-center">
-                  <div class="inline-flex w-16 h-16 bg-gray-100 rounded-2xl items-center justify-center mb-3 animate-shimmer">
-                    <svg class="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
-                    </svg>
-                  </div>
-                  <p class="text-sm font-medium text-gray-500">Gerando QR Code...</p>
-                </div>
-              </div>
+            <div>
+              <h4 class="text-sm sm:text-base font-bold text-gray-900">Escaneie o QR Code</h4>
+              <p class="text-xs text-gray-500">Abra o app do banco e escolha Pix</p>
             </div>
           </div>
 
-          <!-- Código Copia e Cola -->
-          <div class="space-y-4">
-            <div class="flex items-center gap-3 mb-4">
-              <div class="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center">
-                <span class="text-2xl font-bold text-white">2</span>
-              </div>
-              <div>
-                <h4 class="text-lg font-bold text-gray-900">Ou copie o código</h4>
-                <p class="text-sm text-gray-600">Cole no app do seu banco</p>
-              </div>
-            </div>
-
-            <div class="bg-gray-50 rounded-2xl border-2 border-gray-200 p-4">
-              <label class="block text-xs font-bold text-gray-700 mb-2">Código Pix (Copia e Cola)</label>
-              <textarea readonly rows="7"
-                        class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-xs text-gray-900 font-mono leading-relaxed focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
-                        data-pix-brcode
-                        placeholder="O código Pix aparecerá aqui..."></textarea>
-
-              <button type="button" data-pix-copy
-                      class="mt-3 w-full group flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 rounded-xl text-white font-bold text-base shadow-lg hover:shadow-xl transition-all transform hover:scale-[1.02]">
-                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                </svg>
-                <span>Copiar Código Pix</span>
-              </button>
-            </div>
-
-            <!-- Status de Verificação -->
-            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border-2 border-blue-100 p-5">
-              <div class="flex items-start gap-4">
-                <div class="flex-shrink-0">
-                  <div class="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center">
-                    <svg class="w-6 h-6 text-white animate-spin" fill="none" viewBox="0 0 24 24">
-                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                  </div>
+          <div class="relative mx-auto w-full max-w-[240px] sm:max-w-[260px]">
+            <div class="bg-white rounded-2xl border-2 border-gray-100 p-4 sm:p-5 flex items-center justify-center aspect-square shadow-lg" data-pix-qr>
+              <div class="text-center">
+                <div class="inline-flex w-12 h-12 bg-gray-100 rounded-xl items-center justify-center mb-2 animate-shimmer">
+                  <svg class="w-6 h-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                  </svg>
                 </div>
-                <div class="flex-1">
-                  <h5 class="text-sm font-bold text-blue-900">Aguardando Pagamento</h5>
-                  <p class="text-sm text-blue-700 mt-1">Assim que você pagar, confirmaremos automaticamente e redirecionaremos para a página de sucesso.</p>
-                  <p class="text-xs text-blue-600 font-medium mt-2" data-pix-checking>Verificando pagamento a cada 7 segundos...</p>
-                </div>
+                <p class="text-xs font-medium text-gray-400">Gerando QR Code...</p>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Dica Adicional -->
-        <div class="mt-8 bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl border border-purple-100 p-6">
-          <div class="flex items-start gap-4">
-            <div class="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center flex-shrink-0">
-              <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <!-- Código Copia e Cola -->
+        <div>
+          <div class="flex items-center gap-2.5 mb-3">
+            <div class="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
+              <span class="text-base sm:text-lg font-bold text-white">2</span>
+            </div>
+            <div>
+              <h4 class="text-sm sm:text-base font-bold text-gray-900">Ou copie o código</h4>
+              <p class="text-xs text-gray-500">Cole no app do seu banco</p>
+            </div>
+          </div>
+
+          <div class="bg-gray-50 rounded-xl border border-gray-200 p-3 sm:p-4">
+            <textarea readonly rows="3"
+                      class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-[11px] sm:text-xs text-gray-900 font-mono leading-relaxed focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
+                      data-pix-brcode
+                      placeholder="O código Pix aparecerá aqui..."></textarea>
+
+            <button type="button" data-pix-copy
+                    class="mt-2.5 w-full group flex items-center justify-center gap-2.5 px-4 py-3 sm:py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 rounded-xl text-white font-bold text-sm sm:text-base shadow-lg hover:shadow-xl transition-all active:scale-[0.98]">
+              <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              <span>Copiar Código Pix</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Status de Verificação -->
+        <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-100 p-3.5 sm:p-4">
+          <div class="flex items-center gap-3">
+            <div class="flex-shrink-0">
+              <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                <svg class="w-5 h-5 text-white animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="flex-1 min-w-0">
+              <h5 class="text-sm font-bold text-blue-900">Aguardando Pagamento</h5>
+              <p class="text-xs text-blue-700 mt-0.5">Confirmaremos automaticamente assim que você pagar.</p>
+              <p class="text-[11px] text-blue-500 font-medium mt-1" data-pix-checking>Verificando a cada 7s...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dica -->
+        <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-100 p-3.5 sm:p-4">
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+              <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <div class="flex-1">
-              <h5 class="text-sm font-bold text-purple-900">Dica importante</h5>
-              <p class="text-sm text-purple-700 mt-1">Pague dentro do tempo limite para garantir que o pedido seja processado imediatamente. Após o pagamento, você receberá uma confirmação por e-mail com suas credenciais de acesso.</p>
-            </div>
+            <p class="text-xs sm:text-sm text-purple-700">Pague dentro do tempo limite para garantir processamento imediato. Você receberá confirmação por e-mail.</p>
           </div>
         </div>
       </div>

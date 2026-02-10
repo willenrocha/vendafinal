@@ -53,9 +53,29 @@ class SyncInstagramProfileJob implements ShouldQueue
             'profile_id' => $profile->id,
             'username' => $profile->username,
             'posts_limit' => $this->postsLimit,
+            'attempt' => $this->attempts(),
         ]);
 
         $result = $syncService->syncProfile($profile, $this->postsLimit);
+
+        // Verificar se os dados vieram vazios/null
+        $profile->refresh();
+        $isDataEmpty = empty($profile->full_name) && 
+                       empty($profile->follower_count) && 
+                       empty($profile->biography);
+
+        if ($isDataEmpty && $this->attempts() < $this->tries) {
+            Log::warning('Instagram sync returned empty data, will retry', [
+                'profile_id' => $profile->id,
+                'username' => $profile->username,
+                'attempt' => $this->attempts(),
+                'max_tries' => $this->tries,
+            ]);
+            
+            // Liberar o job de volta para a fila para tentar novamente
+            $this->release(5); // Aguarda 5 segundos antes de tentar novamente
+            return;
+        }
 
         if (!empty($result['errors'])) {
             Log::error('Instagram sync completed with errors', [
@@ -63,12 +83,19 @@ class SyncInstagramProfileJob implements ShouldQueue
                 'username' => $profile->username,
                 'errors' => $result['errors'],
             ]);
+        } elseif ($isDataEmpty) {
+            Log::error('Instagram sync failed - empty data after all retries', [
+                'profile_id' => $profile->id,
+                'username' => $profile->username,
+                'attempts' => $this->attempts(),
+            ]);
         } else {
             Log::info('Instagram sync completed successfully', [
                 'profile_id' => $profile->id,
                 'username' => $profile->username,
                 'profile_updated' => $result['profile_updated'],
                 'posts_synced' => $result['posts_synced'],
+                'attempt' => $this->attempts(),
             ]);
         }
     }

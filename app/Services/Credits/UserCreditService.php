@@ -34,6 +34,35 @@ class UserCreditService
         });
     }
 
+    /**
+     * @param  'likes'|'views'|'comments'  $type
+     */
+    public function deduct(User $user, string $type, int $amount): UserCreditBalance
+    {
+        if (! in_array($type, ['likes', 'views', 'comments'], true)) {
+            throw new \InvalidArgumentException("Tipo de crédito inválido: {$type}");
+        }
+
+        if ($amount <= 0) {
+            throw new \InvalidArgumentException('Quantidade de crédito precisa ser maior que zero.');
+        }
+
+        return DB::transaction(function () use ($user, $type, $amount): UserCreditBalance {
+            $balance = UserCreditBalance::query()
+                ->where('user_id', $user->id)
+                ->lockForUpdate()
+                ->first();
+
+            if (! $balance || $balance->{$type} < $amount) {
+                throw new \InvalidArgumentException('Saldo de créditos insuficiente.');
+            }
+
+            $balance->decrement($type, $amount);
+
+            return $balance->fresh();
+        });
+    }
+
     public function addPackageBonus(User $user, Package $package): UserCreditBalance
     {
         return DB::transaction(function () use ($user, $package): UserCreditBalance {

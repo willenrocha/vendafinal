@@ -20,6 +20,7 @@ class Order extends Model
         'user_id',
         'instagram_profile_id',
         'status',
+        'is_credit_redemption',
         'customer_name',
         'customer_email',
         'customer_phone',
@@ -50,6 +51,7 @@ class Order extends Model
 
     protected $casts = [
         'status' => OrderStatus::class,
+        'is_credit_redemption' => 'boolean',
         'instagram_profile' => 'array',
         'package_snapshot' => 'array',
         'payment_gateway_data' => 'array',

@@ -13,6 +13,7 @@ class Service extends Model
 
         'name',
         'social_network',
+        'credit_type',
         'is_active',
 
         'provider_name',

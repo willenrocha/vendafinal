@@ -78,20 +78,15 @@ final class InstagramSyncService
 
             $profileData = $result['profile'] ?? [];
 
-            // Baixa e converte foto de perfil para base64
-            $profilePicBase64 = null;
-            if (!empty($profileData['profile_pic_url'])) {
-                $profilePicBase64 = $this->hikerApi->downloadImageAsBase64(
-                    $profileData['profile_pic_url'],
-                    maxSizeKb: 500 // Limita foto de perfil a 500KB
-                );
-            }
+            // Salva apenas a URL da foto de perfil (sem base64)
+            $profilePicUrl = $profileData['profile_pic_url'] ?? null;
 
             // Atualiza o perfil
             $profile->update([
                 'full_name' => $profileData['full_name'] ?? null,
                 'biography' => $profileData['biography'] ?? null,
-                'profile_pic_base64' => $profilePicBase64,
+                'profile_pic_url' => $profilePicUrl,
+                'profile_pic_base64' => null, // Limpar base64 antigo
                 'follower_count' => $profileData['follower_count'] ?? null,
                 'following_count' => $profileData['following_count'] ?? null,
                 'media_count' => $profileData['media_count'] ?? null,
@@ -255,15 +250,13 @@ final class InstagramSyncService
     }
 
     /**
-     * Baixa uma imagem e retorna os dados em base64
+     * Retorna apenas a URL original (sem download de base64)
      */
     private function downloadAndEncodeImage(string $url): array
     {
-        $base64 = $this->hikerApi->downloadImageAsBase64($url, maxSizeKb: 2048);
-
         return [
             'url_original' => $url,
-            'base64' => $base64,
+            'base64' => null,
             'downloaded_at' => now()->toIso8601String(),
         ];
     }

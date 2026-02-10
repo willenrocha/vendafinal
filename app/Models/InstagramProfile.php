@@ -13,6 +13,7 @@ class InstagramProfile extends Model
         'username',
         'full_name',
         'biography',
+        'profile_pic_url',
         'profile_pic_base64',
         'follower_count',
         'following_count',
@@ -51,6 +52,53 @@ class InstagramProfile extends Model
     public function posts(): HasMany
     {
         return $this->hasMany(InstagramPost::class);
+    }
+
+    /**
+     * Retorna posts recentes do perfil.
+     */
+    public function getRecentPosts(int $limit = 9)
+    {
+        // Buscar dados sem o campo images (que é muito pesado)
+        $posts = \DB::table('instagram_posts')
+            ->where('instagram_profile_id', $this->id)
+            ->select('id', 'shortcode', 'like_count', 'comment_count')
+            ->orderBy('id', 'desc')
+            ->limit($limit)
+            ->get();
+
+        return $posts->map(function ($post) {
+            // Buscar apenas o campo images para este post específico
+            $images = \DB::table('instagram_posts')
+                ->where('id', $post->id)
+                ->value('images');
+
+            $imagesArray = json_decode($images, true);
+            $imageData = is_array($imagesArray) && count($imagesArray) > 0
+                ? $imagesArray[0]
+                : null;
+
+            $imageUrl = instagram_image($imageData);
+
+            return [
+                'id' => $post->id,
+                'shortcode' => $post->shortcode,
+                'image' => $imageUrl,
+                'like_count' => number_format((int) $post->like_count, 0, ',', '.'),
+                'comment_count' => number_format((int) $post->comment_count, 0, ',', '.'),
+                'instagram_url' => 'https://www.instagram.com/p/' . $post->shortcode . '/',
+            ];
+        })
+        ->values()
+        ->toArray();
+    }
+
+    /**
+     * Conta total de posts do perfil.
+     */
+    public function getPostsCount(): int
+    {
+        return $this->posts()->count();
     }
 
     /**
@@ -94,5 +142,21 @@ class InstagramProfile extends Model
     public function getProfilePicUrl(): ?string
     {
         return $this->profile_data['profile_pic_url'] ?? null;
+    }
+
+    /**
+     * Retorna URL da foto de perfil via proxy (ou base64 se tiver)
+     */
+    public function getProfilePicProxied(): ?string
+    {
+        if ($this->profile_pic_base64) {
+            return $this->profile_pic_base64;
+        }
+
+        if ($this->profile_pic_url) {
+            return proxy_image($this->profile_pic_url);
+        }
+
+        return null;
     }
 }

@@ -4,20 +4,18 @@ namespace App\Http\Controllers\Api;
 
 use App\Enums\OrderStatus;
 use App\Http\Controllers\Controller;
-use App\Jobs\SendOrderToProviderJob;
 use App\Models\Order;
-use App\Notifications\OrderStatusChangedNotification;
+use App\Services\Orders\ConfirmPaymentService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Notification;
 
 class ExpayWebhookController extends Controller
 {
     /**
      * Recebe notificações de pagamento da Expay
      */
-    public function handle(Request $request): JsonResponse
+    public function handle(Request $request, ConfirmPaymentService $confirmPaymentService): JsonResponse
     {
         Log::info('Expay Webhook received', $request->all());
 
@@ -49,28 +47,15 @@ class ExpayWebhookController extends Controller
         $gatewayData['webhook_data'] = $request->all();
         $gatewayData['last_webhook_at'] = now()->toIso8601String();
         $order->payment_gateway_data = $gatewayData;
+        $order->save();
 
         // Processa o status do pagamento
         $statusLower = strtolower($status);
 
         if (in_array($statusLower, ['paid', 'approved', 'success', 'completed'])) {
-            // Pagamento aprovado
+            // Pagamento aprovado — usa o mesmo fluxo do admin
             if ($order->status !== OrderStatus::Paid) {
-                $order->status = OrderStatus::Paid;
-                $order->paid_at = now();
-                $order->save();
-
-                Log::info('Expay Webhook: Pagamento aprovado', [
-                    'order_id' => $order->id,
-                    'transaction_id' => $transactionId,
-                ]);
-
-                // Envia notificação ao cliente
-                Notification::route('mail', $order->customer_email)
-                    ->notify(new OrderStatusChangedNotification($order));
-
-                // Envia o pedido para o provedor
-                SendOrderToProviderJob::dispatch($order);
+                $confirmPaymentService->handle($order);
             }
         } elseif (in_array($statusLower, ['cancelled', 'canceled', 'failed', 'expired'])) {
             // Pagamento cancelado/expirado
@@ -86,9 +71,6 @@ class ExpayWebhookController extends Controller
                 ]);
             }
         } else {
-            // Status pendente ou desconhecido - apenas atualiza os dados
-            $order->save();
-
             Log::info('Expay Webhook: Status pendente ou desconhecido', [
                 'order_id' => $order->id,
                 'transaction_id' => $transactionId,

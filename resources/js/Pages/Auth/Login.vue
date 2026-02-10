@@ -1,0 +1,208 @@
+<script setup lang="ts">
+import { Head, Link, useForm } from '@inertiajs/vue3';
+import InputError from '@/Components/InputError.vue';
+
+defineProps<{
+    canResetPassword?: boolean;
+    status?: string;
+}>();
+
+const form = useForm({
+    email: '',
+    password: '',
+    remember: false,
+});
+
+const submit = () => {
+    form.post(route('login'), {
+        onFinish: () => {
+            form.reset('password');
+        },
+    });
+};
+</script>
+
+<template>
+    <div class="bg-gradient-to-br from-gray-50 via-purple-50 to-blue-50 min-h-screen">
+        <Head title="Login" />
+
+        <!-- Navbar -->
+        <nav class="border-b border-gray-200 bg-white/80 backdrop-blur-md shadow-sm flex justify-center py-4">
+            <img src="/images/logo.svg" alt="Logo" class="h-10">
+        </nav>
+
+        <!-- Main Content -->
+        <div class="flex items-center justify-center min-h-[calc(100vh-92px)] px-4 py-12">
+            <div class="bg-white rounded-3xl shadow-2xl p-10 w-full max-w-lg border border-gray-100">
+                <!-- Header -->
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">Painel do Cliente</h1>
+                </div>
+
+                <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
+                    {{ status }}
+                </div>
+
+                <form @submit.prevent="submit" class="space-y-6">
+                    <!-- Email -->
+                    <div>
+                        <label for="email" class="block text-sm font-semibold text-gray-800 mb-3">E-mail</label>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <div class="icon-bg rounded-xl p-2.5 shadow-sm group-focus-within:shadow-md transition-shadow">
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <input
+                                id="email"
+                                type="email"
+                                v-model="form.email"
+                                required
+                                autofocus
+                                autocomplete="username"
+                                placeholder="seu.email@exemplo.com"
+                                class="w-full pl-20 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 ring-inovix focus:border-transparent outline-none transition-all text-gray-800 placeholder-gray-400 bg-gray-50 focus:bg-white font-medium"
+                            />
+                        </div>
+                        <InputError class="mt-2" :message="form.errors.email" />
+                    </div>
+
+                    <!-- Password -->
+                    <div>
+                        <label for="password" class="block text-sm font-semibold text-gray-800 mb-3">Senha</label>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <div class="icon-bg rounded-xl p-2.5 shadow-sm group-focus-within:shadow-md transition-shadow">
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <input
+                                id="password"
+                                type="password"
+                                v-model="form.password"
+                                required
+                                autocomplete="current-password"
+                                placeholder="Digite sua senha"
+                                class="w-full pl-20 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 ring-inovix focus:border-transparent outline-none transition-all text-gray-800 placeholder-gray-400 bg-gray-50 focus:bg-white font-medium"
+                            />
+                        </div>
+                        <InputError class="mt-2" :message="form.errors.password" />
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button
+                        type="submit"
+                        :disabled="form.processing"
+                        class="w-full btn-primary text-white py-4 px-6 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] mt-8 disabled:opacity-50"
+                    >
+                        <span class="flex items-center justify-center gap-2">
+                            Acessar Painel
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                            </svg>
+                        </span>
+                    </button>
+                </form>
+
+                <!-- Footer -->
+                <div class="mt-8 pt-6 border-t border-gray-200 text-center">
+                    <Link
+                        v-if="canResetPassword"
+                        :href="route('password.request')"
+                        class="text-sm font-semibold text-inovix hover:opacity-80 transition-opacity inline-flex items-center gap-2"
+                    >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+                        </svg>
+                        Esqueceu ou não sabe sua senha?
+                    </Link>
+                </div>
+
+                <!-- Security Badge -->
+                <div class="mt-6 flex items-center justify-center gap-2 text-xs text-gray-500">
+                    <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path>
+                    </svg>
+                    Conexão segura e criptografada
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation Bar -->
+        <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg">
+            <div class="max-w-screen-xl mx-auto px-4">
+                <div class="flex items-center justify-around relative h-20">
+                    <a href="#" class="flex flex-col items-center justify-center flex-1 group">
+                        <svg class="w-7 h-7 text-orange-500 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M3 13h1v7c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-7h1a1 1 0 0 0 .707-1.707l-9-9a.999.999 0 0 0-1.414 0l-9 9A1 1 0 0 0 3 13zm7 7v-5h4v5h-4zm2-15.586 6 6V15l.001 5H16v-5c0-1.103-.897-2-2-2h-4c-1.103 0-2 .897-2 2v5H6v-9.586l6-6z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="flex flex-col items-center justify-center flex-1 group">
+                        <svg class="w-7 h-7 text-gray-600 group-hover:text-gray-900 group-hover:scale-110 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </a>
+                    <div class="flex flex-col items-center justify-center flex-1 -mt-10">
+                        <a href="#" class="cart-pulse bg-green-500 hover:bg-green-600 rounded-full p-4 shadow-2xl transition-all hover:scale-110 active:scale-95">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            </svg>
+                        </a>
+                    </div>
+                    <a href="#" class="flex flex-col items-center justify-center flex-1 group">
+                        <svg class="w-7 h-7 text-gray-600 group-hover:text-gray-900 group-hover:scale-110 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="flex flex-col items-center justify-center flex-1 group">
+                        <svg class="w-7 h-7 text-gray-600 group-hover:text-gray-900 group-hover:scale-110 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </div>
+</template>
+
+<style scoped>
+@keyframes pulse-scale {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+  50% { box-shadow: 0 0 0 20px rgba(34, 197, 94, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+
+.cart-pulse {
+  animation: pulse-scale 2s ease-in-out infinite, pulse-ring 2s ease-in-out infinite;
+}
+
+.icon-bg {
+  background-color: #4C85EF;
+}
+
+.text-inovix {
+  color: #6108EF;
+}
+
+.ring-inovix {
+  --tw-ring-color: #6108EF;
+}
+
+.btn-primary {
+  background-color: #6108EF;
+}
+
+.btn-primary:hover {
+  background-color: #5C00EE;
+}
+</style>
